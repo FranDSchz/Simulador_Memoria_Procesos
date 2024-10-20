@@ -1,0 +1,2 @@
+# Dependencias del proyecto (librerías como PyQt5, Tkinter, etc.)
+#Para ralizar los test unitarios instalamos --> pip install pytest
