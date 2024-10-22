@@ -17,16 +17,15 @@ class Simulador:
         self.multiPro += n
     
     def getMultiPro(self):
-        return self.getMultiPro
+        return self.multiPro
     
     def agregarAListos(self,proceso):
-        proceso.asignarArribo(self.tiempo)
         self.listos.append(proceso)
 
     
     def hayProcesos(self, memoria = False):
         if not memoria:
-            return (self.listos != []) or (self.suspendidos != [])
+            return (self.listos != [])
         else:
             return (self.espera != []) or (self.suspendidos != [])
         

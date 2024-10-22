@@ -1,4 +1,4 @@
-from particion import Particion
+from src.models.particion import Particion
 class MemoriaPrincipal:
     def __init__(self):
         self.particiones = []

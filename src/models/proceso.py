@@ -16,7 +16,7 @@ class Proceso:
     def __str__(self):
         return f'ID: {self.id}\nTI: {self.ti}\nTA: {self.taMemoria}\nTAM: {self.tam}\n'
     def finalizo(self):
-        return self.ti <= self.tiempoEjecutado
+        return self.ti == self.tiempoEjecutado
     
     def setTiempoRetorno(self, tiempo):
         self.tr = tiempo
