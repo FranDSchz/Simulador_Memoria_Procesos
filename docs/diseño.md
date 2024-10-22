@@ -1,1 +1,3 @@
 # Explicación de la arquitectura, decisiones de diseño, etc.
+
+
