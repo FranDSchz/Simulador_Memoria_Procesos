@@ -1,6 +1,6 @@
 # Simulador_Memoria_Procesos
 Repositorio para el desarrollo del simulador de gestión de memoria y planificación de procesos
-
+***Anotacion para no olvidarme de configurar bien el entorno virtual, agregar pytest(opcional) y rich para configurar bien***
 ## Pasos para configurar el entorno virtual:
 
 ### 1. Navega al directorio del proyecto

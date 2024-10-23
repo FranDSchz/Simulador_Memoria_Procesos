@@ -11,12 +11,14 @@ from src.controller.maincontroller import MainController
 
 def main():
     ctrl = MainController()
-    ctrl.cargarProcesos()
     mp = MemoriaPrincipal()
     # ver si no hay drama con cargar SO en mp
-    mp.particiones = [Particion(0,100,'SO'),Particion(1,250),Particion(2,150),Particion(3,50)]
+    so = Proceso('SO',0,0,100)
+    mp.particiones = [Particion(0,100,so),Particion(1,250),Particion(2,150),Particion(3,50)]
     cpu = Procesador()
     consola = UIConsola()
+    consola.mensaje_inicial()
+    ctrl.cargarProcesos()
     ctrl.ejecutar(cpu,mp,consola)
     
 

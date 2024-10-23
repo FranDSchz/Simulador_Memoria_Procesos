@@ -14,10 +14,14 @@ class MainController:
         self.loader.cargarProcesos(self.simulador)
     
     def ejecutar(self, cpu, mp, consola):
-        while len(cpu.terminados) < Proceso.nroInstancias:
-            #print('terminados',len(cpu.terminados))
+        resg = -1
+        while len(cpu.terminados) < (Proceso.nroInstancias-1):
+            if self.simulador.getTiempo() != resg:
+                consola.mostrar_tiempo_actual(self.simulador.getTiempo())
+                resg = self.simulador.getTiempo()
             #print('procesos',Proceso.nroInstancias)
             #print()
             #x = input()
-            self.ctrlMem.gestionarMemoria(self.simulador, mp)
-            self.crtlProc.roundRobin(cpu, self.simulador, consola)
+            self.ctrlMem.gestionarMemoria(self.simulador, mp, consola)
+            self.crtlProc.roundRobin(cpu, self.simulador, consola,mp)
+            

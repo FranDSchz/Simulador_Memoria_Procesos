@@ -1,8 +1,10 @@
+from src.utils.funcAux import pausar
+from time import sleep
 class CTRLMemoria:
     def __init__(self):
         pass
     
-    def gestionarMemoria(self, simu, mp):
+    def gestionarMemoria(self, simu, mp, consola):
         #x = input(f'simu.tiempo INICIO:{simu.getTiempo()}')
         #x = input(f'grado multip {simu.getMultiPro()}')
         if simu.getMultiPro() < 5:
@@ -42,6 +44,18 @@ class CTRLMemoria:
                                 #x = input(f'susp post de simu.quitarDeList {simu.suspendidos}')
                                 #x = input(f'espera post de simu.quitarDeLis {simu.espera}')
                                 #x = input(f'multipro antes cont {simu.multiPro}')
-                                simu.contarMultiPro() 
-                                #x = input(f'multipro post cont {simu.multiPro}')
+                                simu.contarMultiPro()
+                                #x = input(f'multipro post cont {simu.multiPro}') 
+                                consola.proceso_ingresa_cola_listos(proceso)
+                                sleep(0.3)
+                                consola.mostrar_tabla_particiones(mp.particiones)
+                                sleep(0.3)
+                                consola.mostrar_cola_procesos('Cola de listos',simu.listos,'Listos')
+                                pausar()
                                 break
+                            else:
+                                consola.proceso_ingresa_cola_suspendidos(proceso)
+                                sleep(0.3)
+                                simu.suspendidos.append(proceso)
+                                simu.quitarDeLista(proceso)
+                                simu.contarMultiPro()
