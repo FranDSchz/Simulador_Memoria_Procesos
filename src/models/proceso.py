@@ -10,6 +10,7 @@ class Proceso:
         self.tam = tam
         self.taListos = None
         self.tr = None
+        self.taSusp = None
         self.tiempoEjecutado = 0 #Tiempo Ejecutado
         self.partAsig = None #Deberia poner en none cuando termina la ejecucion o da igual?
         Proceso.nroInstancias += 1

@@ -11,7 +11,7 @@ class CTRLProcesador:
         self.cont = 0
     
     
-    def roundRobin(self,cpu,simu, consola,mp):
+    def roundRobin(self,cpu,simu, consola,mp, nroInstancias):
         #x = input(f'simu.tiempo INICIO:{simu.tiempo}')
         #x = input(f'cpu.estaOcupada: {cpu.estaOcupada()}')
         
@@ -36,14 +36,11 @@ class CTRLProcesador:
                 simu.contarMultiPro(-1)
                 #x = input(f'multiprogramacion post desc:{simu.multiPro}')
                 consola.procesoFinalizado(proceso) #Implementar en views para mostrar por pantalla que el proceso termino
-                sleep(0.3)
-                consola.mostrar_estado_procesador(False,self.quantum-self.cont)
-                sleep(0.3)
-                consola.mostrar_tabla_particiones(mp.particiones)
-                sleep(0.3)
-                consola.mostrar_cola_procesos('Cola de listos',simu.listos,'Listos')
+                sleep(1)
+                if len(cpu.terminados) == (nroInstancias):
+                    consola.show_status(cpu.getProcesoActual(), self.getQuantum_rest(), simu.getTiempo(), mp.particiones, simu.listos)
                 pausar()
-            elif self.quantum == self.cont and simu.listos != []:
+            elif self.quantum == self.cont:
                 #x = input(f'simu.listos antes de add:{simu.listos}')
                 simu.agregarAListos(proceso)
                 #x = input(f'simu.listos post  add:{simu.listos}')
@@ -53,8 +50,10 @@ class CTRLProcesador:
                 self.cont = 0
                 simu.contarMultiPro(-1)
                 consola.proceso_abandona_cpu(proceso) #Ver como implemento
+                sleep(1)
                 consola.proceso_ingresa_cola_listos(proceso)
-                pausar()
+                sleep(1)
+                #pausar()
             else:
                 #x = input(f'cpu.procesoActual.tiempoEjecutado antes ejecutar():{cpu.procesoActual.tiempoEjecutado}')
                 proceso.ejecutar()
@@ -77,13 +76,13 @@ class CTRLProcesador:
                 #x = input(f'cpu.procesoActual post {cpu.procesoActual}')
                 self.cont = 0 #Esto se inicializa con el constructor, capaz no sea necesario o si?
                 consola.proceso_ingresa_cpu(proceso)
-                sleep(0.3)
-                #consola.mostrar_estado_procesador(proceso,self.quantum-self.cont)
-                sleep(0.3)
-                consola.mostrar_cola_procesos('Cola de listos',simu.listos,'Listos')
+                sleep(1)
+                consola.show_status(cpu.getProcesoActual(), self.getQuantum_rest(), simu.getTiempo(), mp.particiones, simu.listos)
                 pausar()
 
             else:
                 #x = input(f'simu.tiempo antes avz {simu.tiempo}')
                 simu.avanzarUnTiempo()
                 #x = input(f'simu.tiempo antes avz {simu.tiempo}')
+    def getQuantum_rest(self):
+        return self.quantum - self.cont

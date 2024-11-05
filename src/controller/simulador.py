@@ -42,8 +42,10 @@ class Simulador:
         return self.nuevos != []
     
     def actualizarListas(self):
-        self.espera.extend([proceso for proceso in self.nuevos if proceso.taMemoria == self.tiempo])
+        resg = [proceso for proceso in self.nuevos if proceso.taMemoria == self.tiempo]
+        self.espera.extend(resg)
         self.nuevos = [proceso for proceso in self.nuevos if proceso.taMemoria != self.tiempo]
+        return resg
     
     def getProcesos(self):
         return self.suspendidos + self.espera

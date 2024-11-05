@@ -5,11 +5,13 @@ from rich.table import Table
 from rich.progress import Progress, BarColumn, TextColumn
 from rich.markdown import Markdown
 from time import sleep
-
+"""
+MEJORAR LA PRESENTACION, AGREGAR DETALLES DE LA MEMORIA y procesador
+"""
 class UIConsola:
     def __init__(self):
         self.console = Console()
-
+    
     def mostrar_tiempo_actual(self, tiempo_actual):
         """Muestra el instante de tiempo actual"""
         self.console.print(Panel(f"[bold yellow]Tiempo actual: [cyan]{tiempo_actual}[/cyan] segundos[/bold yellow]", style="bold green"))
@@ -20,8 +22,10 @@ class UIConsola:
             tiempo_ejecucion_restante = proceso.ti - proceso.tiempoEjecutado
             self.console.print(Panel(f"[bold cyan]Estado del Procesador[/bold cyan]", style="blue"))
             self.console.print(f"[bold]Proceso en Ejecución:[/bold] [green]T{proceso.id}[/green]")
-            self.console.print(f"[bold]Quantum restante:[/bold] [yellow]{quantum_restante}[/yellow]")
+            self.console.print(f"Tiempo de irrupcion: [cyan]{proceso.ti}[/cyan] segundos")
             self.console.print(f"[bold]Tiempo de ejecución restante:[/bold] [magenta]{tiempo_ejecucion_restante}[/magenta]")
+            self.console.print(f"[bold]Quantum restante:[/bold] [yellow]{quantum_restante}[/yellow]")
+            
         else:
             self.console.print(Panel("[bold red]El procesador está inactivo[/bold red]", style="red"))
 
@@ -55,7 +59,7 @@ class UIConsola:
         self.console.print(table)
         
 
-    def mostrar_cola_procesos(self, titulo, procesos, tiempo_key):
+    def mostrar_cola_procesos(self, procesos, tiempo_key="Listos",titulo="Cola de listos"):
         """Muestra el estado de una cola de procesos (listos, suspendidos, etc.)"""
         table = Table(title=titulo)
 
@@ -142,6 +146,7 @@ class UIConsola:
         self.console.print(f"[bold blue]El proceso T{proceso.id} ingresó al CPU[/bold blue]")
         self.console.print(f"Tiempo de ejecución restante: [magenta]{proceso.ti - proceso.tiempoEjecutado}[/magenta] segundos")
         
+        
     
     def proceso_abandona_cpu(self, proceso):
         """Muestra un mensaje cuando un proceso abandona el CPU"""
@@ -150,4 +155,12 @@ class UIConsola:
     
     def procesoFinalizado(self, proceso):
         self.console.print(Panel(f"[bold red]El proceso T{proceso.id} ha finalizado[/bold red]", style="green"))
-        
+    
+    def show_status(self, proceso, quantum, tiempo, particiones, listos):
+        #self.mostrar_tiempo_actual(tiempo)
+        sleep(0.5)
+        self.mostrar_tabla_particiones(particiones)
+        sleep(0.5)
+        self.mostrar_cola_procesos(listos)
+        sleep(0.5)
+        self.mostrar_estado_procesador(proceso, quantum)
