@@ -18,10 +18,7 @@ def main():
     cpu = Procesador()
     consola = UIConsola()
     consola.mensaje_inicial()
-    ctrl.cargarProcesos()
-    ctrl.ejecutar(cpu,mp,consola)
-    
-
+    ctrl.iniciar(cpu,mp,consola)
         
 if __name__ == "__main__":
     main()

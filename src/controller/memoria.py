@@ -18,16 +18,23 @@ class CTRLMemoria:
                 arribaron = simu.actualizarListas()
                 #x = input(f'act lista nuevos {simu.nuevos}')
                 #x = input(f'act lista espera {simu.espera}')
-            if arribaron:
+            if arribaron and consola != None:
                 for a in arribaron:
                     consola.proceso_ingresa_sistema(a)
-                    sleep(0.3)
+                    sleep(1)
             #x = input(f'mp.obtenerParticiones(disp) {mp.obtenerParticiones('disponibles')}')
             if mp.obtenerParticiones('disponibles') != []:
                 #x = input(f'simu.hayProcesos(True) {simu.hayProcesos(True)}')
                 if simu.hayProcesos(True):
                     #x = input(f'for simu.getProcesos() {simu.getProcesos()}')
                     for proceso in simu.getProcesos():
+                        if proceso.tam > 250:
+                            if consola != None:
+                                consola.procMuyGrande(proceso)
+                            simu.noEjecutados.append(proceso)
+                            simu.quitarDeLista(proceso)
+                            continue
+
                         partDisp = mp.obtenerParticiones('disponibles')
                         #x = input(f'partDisp = mp.ob.. {partDisp}')
                         partDisp.sort(key=lambda particion: particion.tam, reverse=True)
@@ -52,16 +59,18 @@ class CTRLMemoria:
                                 #x = input(f'multipro antes cont {simu.multiPro}')
                                 simu.contarMultiPro()
                                 #x = input(f'multipro post cont {simu.multiPro}') 
-                                consola.proceso_ingresa_cola_listos(proceso)
-                                sleep(1)
+                                if consola != None:
+                                    consola.proceso_ingresa_cola_listos(proceso)
+                                    sleep(1)
                                 break
                             else:
-                                consola.proceso_ingresa_cola_suspendidos(proceso)
-                                sleep(1)
+                                if consola != None:
+                                    consola.proceso_ingresa_cola_suspendidos(proceso)
+                                    sleep(1)
                                 proceso.taSusp = simu.getTiempo()
                                 simu.suspendidos.append(proceso)
                                 simu.quitarDeLista(proceso)
                                 simu.contarMultiPro()
-            if arribaron:
+            if arribaron and consola != None:
                 consola.show_status(proc_act, q_rest, simu.getTiempo(), mp.particiones, simu.listos)
                 pausar()

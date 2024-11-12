@@ -2,8 +2,9 @@ from src.utils.funcAux import pausar
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+from rich import box
+from rich.text import Text
 from rich.progress import Progress, BarColumn, TextColumn
-from rich.markdown import Markdown
 from time import sleep
 """
 MEJORAR LA PRESENTACION, AGREGAR DETALLES DE LA MEMORIA y procesador
@@ -11,24 +12,80 @@ MEJORAR LA PRESENTACION, AGREGAR DETALLES DE LA MEMORIA y procesador
 class UIConsola:
     def __init__(self):
         self.console = Console()
+    def menuPrincipal(self):
+        print("-------------MENU PRINCIPAL-----------")
+        print("[1] CARGAR PROCESOS")
+        print("[2] INICIAR SIMULACION")
+        print("[3] GESTIONAR PROCESOS")
+        print("[4] OBTENER ESTADISTICAS")
+        print("[5] AYUDA")
+        print("[S] SALIR")
+
+    def mensajeDespedida(self):
+        print("Adios...")
+
+    def procMuyGrande(self, proceso):
+        print(f"El proceso T{proceso.id} es demasiado grande para ser ejecutado")
     
     def mostrar_tiempo_actual(self, tiempo_actual):
         """Muestra el instante de tiempo actual"""
         self.console.print(Panel(f"[bold yellow]Tiempo actual: [cyan]{tiempo_actual}[/cyan] segundos[/bold yellow]", style="bold green"))
 
     def mostrar_estado_procesador(self, proceso, quantum_restante):
-        """Muestra el estado del procesador"""
+        """Muestra un estado del procesador más atractivo y visualmente llamativo."""
         if proceso:
+            # Calcular tiempo de ejecución restante
             tiempo_ejecucion_restante = proceso.ti - proceso.tiempoEjecutado
-            self.console.print(Panel(f"[bold cyan]Estado del Procesador[/bold cyan]", style="blue"))
-            self.console.print(f"[bold]Proceso en Ejecución:[/bold] [green]T{proceso.id}[/green]")
-            self.console.print(f"Tiempo de irrupcion: [cyan]{proceso.ti}[/cyan] segundos")
-            self.console.print(f"[bold]Tiempo de ejecución restante:[/bold] [magenta]{tiempo_ejecucion_restante}[/magenta]")
-            self.console.print(f"[bold]Quantum restante:[/bold] [yellow]{quantum_restante}[/yellow]")
             
-        else:
-            self.console.print(Panel("[bold red]El procesador está inactivo[/bold red]", style="red"))
+            # Crear encabezado
+            encabezado = TextColumn("[bold cyan]Estado del Procesador[/bold cyan]", justify="center")
+            
+            # Mostrar detalles del proceso en ejecución dentro de un Panel
+            self.console.print(
+                Panel(
+                    f"\n[bold]Proceso en Ejecución:[/bold] [green]T{proceso.id}[/green]\n"
+                    f"[bold]Tiempo de irrupción:[/bold] [cyan]{proceso.ti}[/cyan] segundos\n"
+                    f"[bold]Tiempo de ejecución restante:[/bold] [magenta]{tiempo_ejecucion_restante}[/magenta] segundos\n"
+                    f"[bold]Quantum restante:[/bold] [yellow]{quantum_restante}[/yellow] segundos\n",
+                    title="🔄 [bold blue]Ejecución en Curso[/bold blue]",
+                    title_align="center",
+                    border_style="blue"
+                )
+            )
+            
+            # Crear barra de progreso para tiempo de ejecución restante
+            with Progress(
+                BarColumn(bar_width=30),
+                TextColumn("[cyan]{task.fields[message]}"),
+                console=self.console,
+                transient=True,
+            ) as progress:
+                tarea_proceso = progress.add_task(
+                    "Tiempo restante", total=proceso.ti, completed=proceso.tiempoEjecutado, 
+                    message=f"{tiempo_ejecucion_restante}/{proceso.ti} segundos"
+                )
+                while not progress.finished:
+                    progress.update(tarea_proceso, advance=1)
+                    sleep(0.4)
 
+            # Crear barra de progreso para quantum restante
+            with Progress(
+                BarColumn(bar_width=30),
+                TextColumn("[yellow]{task.fields[message]}"),
+                console=self.console,
+                transient=True,
+            ) as progress:
+                tarea_quantum = progress.add_task(
+                    "Quantum restante", total=quantum_restante, completed=0, 
+                    message=f"{quantum_restante} segundos"
+                )
+                while not progress.finished:
+                    progress.update(tarea_quantum, advance=1)
+                    sleep(0.4)
+
+        else:
+            # Mostrar mensaje si el procesador está inactivo
+            self.console.print(Panel("[bold red]El procesador está inactivo[/bold red]", style="red"))
 
     def mostrar_tabla_particiones(self, particiones):
         """Muestra el estado de la memoria con colores para particiones ocupadas y libres"""
@@ -108,22 +165,35 @@ class UIConsola:
                 
 
     def mensaje_inicial(self):
-        """Muestra un mensaje inicial con Markdown y emojis"""
-        md = """
-        # Bienvenido al Simulador de Procesos 🚀
-
-        Este simulador te permitirá ver:
-
-        - [cyan]El estado del procesador[/cyan] 💻
-        - [green]La memoria principal con particiones[/green] 🧠
-        - [yellow]Las colas de procesos[/yellow] 🔄
-        - [red]Los procesos terminados[/red] ✅
-
-        ¡Prepárate para administrar tus recursos!
-        """
-        self.console.print(Markdown(md))
+        """Muestra un mensaje inicial formateado usando Rich."""
+        
+        # Crear el título
+        titulo = Text("Bienvenido al Simulador de Procesos 🚀", style="bold yellow", justify="center")
+        
+        # Crear el contenido del mensaje
+        contenido = Text()
+        contenido.append("\nEste simulador te permitirá ver:\n\n", style="bold")
+        contenido.append("- ", style="bold")
+        contenido.append("El estado del procesador", style="cyan")
+        contenido.append(" 💻\n")
+        contenido.append("- ", style="bold")
+        contenido.append("La memoria principal con particiones", style="green")
+        contenido.append(" 🧠\n")
+        contenido.append("- ", style="bold")
+        contenido.append("Las colas de procesos", style="yellow")
+        contenido.append(" 🔄\n")
+        contenido.append("- ", style="bold")
+        contenido.append("Los procesos terminados", style="red")
+        contenido.append(" ✅\n\n")
+        contenido.append("¡Prepárate para administrar tus recursos!\n", style="bold underline")
+        
+        # Mostrar el mensaje en un panel con borde personalizado
+        self.console.print(Panel.fit(contenido, title="Simulador de Procesos", title_align="center", border_style="blue", box=box.ROUNDED))
+        
+        # Mostrar el título en la parte superior
+        self.console.print(titulo)
         pausar()
-    
+
     def proceso_ingresa_sistema(self, proceso):
         """Muestra un mensaje cuando un proceso ingresa al sistema operativo (taMemoria)"""
         self.console.print(f"[bold green]El proceso T{proceso.id} ingresó al sistema operativo[/bold green]")
@@ -158,9 +228,9 @@ class UIConsola:
     
     def show_status(self, proceso, quantum, tiempo, particiones, listos):
         #self.mostrar_tiempo_actual(tiempo)
-        sleep(0.5)
+        #sleep(1)
         self.mostrar_tabla_particiones(particiones)
-        sleep(0.5)
+        sleep(1)
         self.mostrar_cola_procesos(listos)
-        sleep(0.5)
+        sleep(1)
         self.mostrar_estado_procesador(proceso, quantum)

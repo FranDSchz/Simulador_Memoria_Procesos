@@ -1,0 +1,5 @@
+[
+    {"id": 1, "ti": 5, "taMemoria": 2, "tam": 100},
+    {"id": 2, "ti": 3, "taMemoria": 1, "tam": 150},
+    {"id": 3, "ti": 7, "taMemoria": 0, "tam": 80}
+]

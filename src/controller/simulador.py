@@ -2,6 +2,7 @@ class Simulador:
     def __init__(self):
         self.listos = []
         self.suspendidos = []
+        self.noEjecutados = []
         self.espera = []
         self.nuevos = []
         self.tiempo = 0
@@ -55,3 +56,11 @@ class Simulador:
             self.suspendidos.remove(proceso)
         else:
             self.espera.remove(proceso)
+            
+    def resetearDatos(self):
+        self.listos = []
+        self.suspendidos = []
+        self.noEjecutados = []
+        self.espera = []
+        self.tiempo = 0
+        self.multiPro = 0

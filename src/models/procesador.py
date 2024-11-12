@@ -23,3 +23,7 @@ class Procesador:
 
     def ejecutarProceso(self):
         self.procesoActual.ejecutar()
+    
+    def resetearDatos(self):
+        self.terminados = []
+        self.procesoActual = None

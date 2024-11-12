@@ -26,3 +26,6 @@ for i in nuevos:
 
 pruebita = [1]
 print(not pruebita)
+
+hola = "ads"
+print(hola.upper())
